@@ -6,7 +6,7 @@ pipeline{
     stages{
        stage('GetCode'){
             steps{
-                git 'https://github.com/gundepallieswartej/java-hello-world-webapp.git'
+                git 'https://github.com/gundepallieswartej/jenkins-docker-example.git'
             }
          }        
        stage('Build'){
@@ -22,6 +22,15 @@ pipeline{
 //      sh "${scannerHome}/bin/sonar-scanner"
         sh "mvn sonar:sonar"
     }
+        }
+        }
+        stage('Build image') {
+       dockerImage = docker.build("gundepallieswartej/my-app-1.0")
+    }
+    
+        stage('Push image') {
+        withDockerRegistry([ credentialsId: "dockerhubcred", url: "https://hub.docker.com/repository/docker/eswargundepalli/mydokerimage" ]) {
+        dockerImage.push()
         }
         }
        
